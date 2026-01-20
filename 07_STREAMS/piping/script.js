@@ -1,0 +1,1 @@
+process.stdout.write("From script.js file")

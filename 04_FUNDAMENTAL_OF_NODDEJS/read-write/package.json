@@ -1,0 +1,8 @@
+{
+    "name": "sm-copy",
+    "type": "module",
+    "version": "1.0.0",
+    "bin": {
+        "smcopy" : "./appp.js"
+    }
+}

@@ -1,0 +1,28 @@
+
+9:28:02 pm 
+ENOENT: no such file or directory, open 'C:\Users\sanju\Deskto\choose.png' 
+Error: ENOENT: no such file or directory, open 'C:\Users\sanju\Deskto\choose.png'
+    at async open (node:internal/fs/promises:638:25)
+    at async Object.readFile (node:internal/fs/promises:1242:14)
+    at async file:///E:/BACKEND-PROCODRR-SERIES-26/04_FUNDAMENTAL_OF_NODDEJS/read-write/appp.js:4:24
+
+9:28:12 pm 
+ENOENT: no such file or directory, open 'C:\Users\sanju\Deskto\choose.png' 
+Error: ENOENT: no such file or directory, open 'C:\Users\sanju\Deskto\choose.png'
+    at async open (node:internal/fs/promises:638:25)
+    at async Object.readFile (node:internal/fs/promises:1242:14)
+    at async file:///E:/BACKEND-PROCODRR-SERIES-26/04_FUNDAMENTAL_OF_NODDEJS/read-write/appp.js:4:24
+
+9:32:28 pm 
+ENOENT: no such file or directory, open 'C:\Users\sanju\Deskto\choose.png' 
+Error: ENOENT: no such file or directory, open 'C:\Users\sanju\Deskto\choose.png'
+    at async open (node:internal/fs/promises:638:25)
+    at async Object.readFile (node:internal/fs/promises:1242:14)
+    at async file:///E:/BACKEND-PROCODRR-SERIES-26/04_FUNDAMENTAL_OF_NODDEJS/read-write/appp.js:9:24
+
+9:36:50 pm 
+ENOENT: no such file or directory, open 'C:\Users\sanju\Music\sm.png' 
+Error: ENOENT: no such file or directory, open 'C:\Users\sanju\Music\sm.png'
+    at async open (node:internal/fs/promises:638:25)
+    at async Object.readFile (node:internal/fs/promises:1242:14)
+    at async file:///E:/BACKEND-PROCODRR-SERIES-26/04_FUNDAMENTAL_OF_NODDEJS/read-write/appp.js:11:24
