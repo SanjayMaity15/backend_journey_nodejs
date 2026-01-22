@@ -8,5 +8,5 @@ setInterval(() => {
 const content = await fs.readFile("./text.txt", "utf-8")
 console.log("reding");
 
-// console.log(content);
+console.log(content);
 
