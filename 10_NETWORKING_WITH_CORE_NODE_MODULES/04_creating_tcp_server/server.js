@@ -1,27 +1,28 @@
-import net from "node:net"
+import net from "node:net";
+import fs from "node:fs";
+import { pipeline } from "node:stream";
 
-const server = net.createServer()
-
-server.listen(5000)
+const server = net.createServer();
+server.listen(5000);
 
 server.on("listening", () => {
-    console.log("server is running at port no 5000");
-})
+	console.log("server is running at port no 5000");
+});
 
 server.on("connection", (socket) => {
-    console.log("Client connected :", socket.remoteAddress);
-    console.log("Client port :", socket.remotePort);
-    console.log("Client family :", socket.remoteFamily);
+	console.log("Client connected:", socket.remoteAddress);
 
+	const writeStream = fs.createWriteStream("./abcd.webm", { flags: "a" });
 
-    socket.on("data", (chunk) => {
-        console.log(chunk.toString());
-        socket.write("Message Received");
-        
-    })
-    
-    // socket.on("error", () => {
-    //     console.log("Scoket close")
-    // })
-})
+	pipeline(socket, writeStream, (err) => {
+		if (err) {
+			console.error("Pipeline failed:", err);
+		} else {
+			console.log("Stream finished");
+		}
+	});
 
+	socket.on("close", () => {
+		console.log("Client disconnected");
+	});
+});
