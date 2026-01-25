@@ -4,36 +4,64 @@ import fs from "fs/promises";
 import mime from "mime";
 import { pipeline } from "stream/promises";
 
-
-
 const server = http.createServer(async (req, res) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+	res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS");
 	res.setHeader(
 		"Access-Control-Allow-Headers",
-		"Content-Type, X-Original-Name",
+		"Content-Type, X-Original-Name, Current-Path, X-New-Name, X-Old-Name",
 	);
 
 	const [reqUrl, queryString] = req.url.split("?");
+	let reqMethod = reqUrl.split("/").pop();
+	reqMethod = `/${reqMethod}`;
+	console.log(reqMethod);
+	// console.log(reqUrl.split("/"))
 
-    if (reqUrl === "/upload" && req.method === "POST") {
-        const OriginalFilename = req.headers["x-original-name"];
-        
-        const writeStreamHandle = await fs.open(`./storage/${OriginalFilename}`, "w")
-
-        const writeStream = writeStreamHandle.createWriteStream()
-
-        pipeline(req, writeStream)
-        
-        res.end("Success")
-    }else if (req.method === "OPTIONS") {
+	if (req.method === "OPTIONS") {
 		res.writeHead(204);
 		res.end();
 		return;
-	}else if (reqUrl === "/" && req.method === "GET") {
+	} else if (reqUrl === "/upload" && req.method === "POST") {
+		const OriginalFilename = req.headers["x-original-name"];
+		const currentPath = req.headers["current-path"];
+
+		const writeStreamHandle = await fs.open(
+			`./storage/${currentPath}/${OriginalFilename}`,
+			"w",
+		);
+
+		const writeStream = writeStreamHandle.createWriteStream();
+
+		pipeline(req, writeStream);
+
+		res.end("Success");
+	} else if (reqMethod === "/delete" && req.method === "DELETE") {
+		const deletePath = req.headers["current-path"];
+		// console.log("Delete",deletePath)
+
+		fs.unlink(`./storage/${deletePath}`);
+    } else if (reqMethod === "/rename" && req.method === "PUT") {
+        const renamePath = req.headers["current-path"]
+        const oldFileName = req.headers["x-old-name"]
+        const renameFileName = req.headers["x-new-name"]
+        // console.log("hi");
+        // console.log(renamePath);
+        // console.log(renameFileName);
+        // console.log(oldFileName);
+        // // console.log(reqMethod);
+        // // console.log('Nice');
+
+        const array = renamePath.split("/");
+		let path = array.slice(0, -1).join();
+
+        await fs.rename(`./storage/${renamePath}/`, `./storage/${path}/${renameFileName}`)
+
+        res.end("Success")
+    }
+    else if (reqUrl === "/" && req.method === "GET") {
 		try {
 			const itemLists = await readdir("./storage");
-
 			// get name + isDirectory
 			const items = await Promise.all(
 				itemLists.map(async (name) => {
@@ -62,13 +90,15 @@ const server = http.createServer(async (req, res) => {
 			}
 
 			if (stat.isDirectory()) {
-				const itemLists = await readdir(`./storage${reqUrl}`);
+				const itemLists = await readdir(
+					`./storage${decodeURIComponent(reqUrl)}`,
+				);
 
 				// get name + isDirectory
 				const items = await Promise.all(
 					itemLists.map(async (name) => {
 						const stats = await fsStat(
-							`./storage${reqUrl}/${name}`,
+							`./storage${decodeURIComponent(reqUrl)}/${name}`,
 						);
 						return { name, isDirectory: stats.isDirectory() };
 					}),
@@ -102,9 +132,6 @@ const server = http.createServer(async (req, res) => {
 			res.end("File not found");
 		}
 	}
-
-
-
 });
 
 server.listen(8000, () => {
