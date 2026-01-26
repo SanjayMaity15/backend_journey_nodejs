@@ -6,7 +6,10 @@ import { pipeline } from "stream/promises";
 
 const server = http.createServer(async (req, res) => {
 	res.setHeader("Access-Control-Allow-Origin", "*");
-	res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT,OPTIONS");
+	res.setHeader(
+		"Access-Control-Allow-Methods",
+		"GET, POST, DELETE, PUT,OPTIONS",
+	);
 	res.setHeader(
 		"Access-Control-Allow-Headers",
 		"Content-Type, X-Original-Name, Current-Path, X-New-Name, X-Old-Name",
@@ -15,7 +18,8 @@ const server = http.createServer(async (req, res) => {
 	const [reqUrl, queryString] = req.url.split("?");
 	let reqMethod = reqUrl.split("/").pop();
 	reqMethod = `/${reqMethod}`;
-	console.log(reqMethod);
+    // console.log(reqMethod);
+    // console.log(reqUrl)
 	// console.log(reqUrl.split("/"))
 
 	if (req.method === "OPTIONS") {
@@ -38,28 +42,54 @@ const server = http.createServer(async (req, res) => {
 		res.end("Success");
 	} else if (reqMethod === "/delete" && req.method === "DELETE") {
 		const deletePath = req.headers["current-path"];
-		// console.log("Delete",deletePath)
-
-		fs.unlink(`./storage/${deletePath}`);
-    } else if (reqMethod === "/rename" && req.method === "PUT") {
-        const renamePath = req.headers["current-path"]
-        const oldFileName = req.headers["x-old-name"]
-        const renameFileName = req.headers["x-new-name"]
-        // console.log("hi");
-        // console.log(renamePath);
-        // console.log(renameFileName);
-        // console.log(oldFileName);
-        // // console.log(reqMethod);
-        // // console.log('Nice');
-
-        const array = renamePath.split("/");
-		let path = array.slice(0, -1).join();
-
-        await fs.rename(`./storage/${renamePath}/`, `./storage/${path}/${renameFileName}`)
-
+        console.log("Delete",deletePath)
+        
+		const stat = await fs.stat(`./storage/${deletePath}`);
+		if (stat.isDirectory()) {
+			fs.rm(`./storage/${deletePath}`, {recursive: true, force: true});
+		} else {
+			fs.unlink(`./storage/${deletePath}`);
+        }
+        
         res.end("Success")
-    }
-    else if (reqUrl === "/" && req.method === "GET") {
+	} else if (reqMethod === "/rename" && req.method === "PUT") {
+		const renamePath = req.headers["current-path"];
+		// const oldFileName = req.headers["x-old-name"]
+		const renameFileName = req.headers["x-new-name"];
+
+
+        // const stats = await fs.stat(renamePath)
+
+        // if (stats.isDirectory()) {
+         
+		// await fs.rename(
+		// 	`./storage/${renamePath}/`,
+		// 	`./storage/${path}/${renameFileName}`,
+		// );   
+        // }
+
+		const array = renamePath.split("/");
+        let path = array.slice(0, -1).join();
+        
+        console.log("Hi");
+        console.log(path);
+        console.log(renamePath);
+        console.log(renameFileName);
+
+		await fs.rename(
+			`./storage/${renamePath}`,
+			`./storage/${path}/${renameFileName}`,
+		); 
+
+		res.end("Success");
+    } else if (reqMethod === "/create-folder" && req.method === "POST") {
+        const foldername = req.headers["x-original-name"]
+        const folderPath = req.headers["current-path"]
+        
+        fs.mkdir(`./storage/${folderPath}/${foldername}`)
+        res.end("Suucess")
+
+    } else if (reqUrl === "/" && req.method === "GET") {
 		try {
 			const itemLists = await readdir("./storage");
 			// get name + isDirectory
