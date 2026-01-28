@@ -1,0 +1,22 @@
+{
+  "name": "file-storage-app",
+  "version": "1.0.0",
+  "description": "A file storage app",
+  "keywords": [
+    "node",
+    "file"
+  ],
+  "license": "ISC",
+  "author": "Sanjay Maity",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mime": "^4.1.0",
+    "multer": "^2.0.2"
+  }
+}
