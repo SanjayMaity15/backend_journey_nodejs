@@ -3,7 +3,7 @@ import cors from "cors";
 import multer from "multer";
 
 const app = express();
-app.use(cors());
+// app.use(cors());
 
 const storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -26,4 +26,4 @@ app.get("/", (req, res) => {
 	res.send("Server is running");
 });
 
-app.listen(8000, () => console.log("Server is running "));
+app.listen(8000, () => console.log("Server is running"));
