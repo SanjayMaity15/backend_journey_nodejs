@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.flex-l{
+    display: flex;
+    gap: 10px;
+}

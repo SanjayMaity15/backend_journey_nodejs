@@ -6,9 +6,9 @@ const Register = () => {
   const BASE_URL = "http://localhost:4000";
 
   const [formData, setFormData] = useState({
-    name: "Anurag Singh",
-    email: "anurag@gmail.com",
-    password: "abcd",
+    name: "Sanjay Maity",
+    email: "sanjay@gmail.com",
+    password: "123456",
   });
 
   // serverError will hold the error message from the server
@@ -39,7 +39,7 @@ const Register = () => {
     setIsSuccess(false); // reset success if any
 
     try {
-      const response = await fetch(`${BASE_URL}/user`, {
+      const response = await fetch(`${BASE_URL}/user/register`, {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
@@ -56,7 +56,7 @@ const Register = () => {
         // Registration success
         setIsSuccess(true);
         setTimeout(() => {
-          navigate("/");
+          navigate("/login  ");
         }, 2000);
       }
     } catch (error) {

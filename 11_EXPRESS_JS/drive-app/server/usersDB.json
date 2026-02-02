@@ -1,10 +1,9 @@
 [
-    {
-        "id": "",
-        "name": "",
-        "email": "",
-        "password": "",
-        "rootDirId": ""
-    }
-    
+	{
+		"id": "035ec70d-18f9-4614-8149-379c659303ea",
+		"name": "Sanjay Maity",
+		"email": "sanjay@gmail.com",
+		"password": "123456",
+		"rootDirId": "4ae5e614-d89e-4627-aafc-f4588b628d52"
+	}
 ]

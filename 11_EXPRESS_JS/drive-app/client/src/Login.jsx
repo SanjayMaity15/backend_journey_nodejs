@@ -6,8 +6,8 @@ const Login = () => {
   const BASE_URL = "http://localhost:4000";
 
   const [formData, setFormData] = useState({
-    email: "anurag@gmail.com",
-    password: "abcd",
+    email: "sanjay@gmail.com",
+    password: "123456",
   });
 
   // serverError will hold the error message from the server
@@ -33,12 +33,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${BASE_URL}/login`, {
+      const response = await fetch(`${BASE_URL}/user/login`, {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include"
       });
 
       const data = await response.json();
@@ -59,7 +60,7 @@ const Login = () => {
   const hasError = Boolean(serverError);
 
   return (
-    <div className="container">
+    <div className="container"> 
       <h2 className="heading">Login</h2>
       <form className="form" onSubmit={handleSubmit}>
         {/* Email */}
@@ -80,7 +81,7 @@ const Login = () => {
         </div>
 
         {/* Password */}
-        <div className="form-group">
+        <div className="form-group bg">
           <label htmlFor="password" className="label">
             Password
           </label>

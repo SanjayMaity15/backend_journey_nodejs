@@ -1,4 +1,5 @@
 import { FaFolderPlus, FaUpload } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function DirectoryHeader({
   directoryName,
@@ -10,6 +11,12 @@ function DirectoryHeader({
   return (
     <header className="directory-header">
       <h1>{directoryName}</h1>
+      
+      <div className="flex-l">
+        <Link to="/login">Login</Link>
+        <Link to="/register">Register</Link>
+      </div>
+
       <div className="header-links">
         {/* Create Folder (icon button) */}
         <button

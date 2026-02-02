@@ -7,6 +7,16 @@ const router = express.Router();
 
 // Read
 router.get("/:id?", async (req, res) => {
+
+  const { uid } = req.cookies;
+  
+  if (!uid) {
+    return res.status(401).json({
+      error: "Loggedin required",
+      success: false
+    })
+  }
+
   const id  = req.params.id || directoriesData[0].id
   const directoryData = directoriesData.find((directory) => directory.id === id)
   if(!directoryData) return res.status(404).json({message: "Directory not found!"})

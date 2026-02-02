@@ -1,13 +1,19 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import directoryRoutes from "./routes/directoryRoutes.js";
 import fileRoutes from "./routes/fileRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
+let a = 10;
 
+app.use(cookieParser())
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 app.use("/directory", directoryRoutes);
 app.use("/file", fileRoutes);
