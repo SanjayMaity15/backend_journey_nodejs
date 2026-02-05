@@ -6,6 +6,7 @@ client.connect()
 
 const db = client.db("expenseDATA")
 
+
 const allCollectionInThisDbs = await db.listCollections().toArray()
 
 const collection = db.collection("users")
@@ -14,4 +15,5 @@ const expenses = await collection.find().toArray()
 
 const admin = await db.admin().listDatabases()
 console.log(db)
+
 console.log(allCollectionInThisDbs)
