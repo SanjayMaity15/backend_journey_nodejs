@@ -1,5 +1,5 @@
 {
-  "name": "curd_op",
+  "name": "schema",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -11,6 +11,6 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "mongodb": "^7.0.0"
+    "mongodb": "^7.1.0"
   }
 }
