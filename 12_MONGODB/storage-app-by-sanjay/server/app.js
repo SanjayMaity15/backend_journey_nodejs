@@ -5,7 +5,7 @@ import directoryRoutes from "./routes/directoryRoutes.js";
 import fileRoutes from "./routes/fileRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import checkAuth from "./middlewares/authMiddleware.js";
-import { connectDB } from "./dbConnedtion.js";
+import { connectDB } from "./config/dbConnedtion.js";
 
 try {
 	const db = await connectDB();
@@ -34,7 +34,7 @@ try {
 	app.use((err, req, res, next) => {
 		console.log(err);
 		res.status(err.status || 500).json({
-			message: "Something went wrong!!",
+			error: "Something went wrong!!",
 		});
 	});
 

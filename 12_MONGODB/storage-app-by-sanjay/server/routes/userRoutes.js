@@ -38,7 +38,14 @@ router.post("/register", async (req, res, next) => {
 		await dirCollection.updateOne({ _id: rootDirId }, { $set: { userId } });
 		res.status(201).json({ message: "User Registered" });
 	} catch (err) {
-		next(err);
+		if (err.code === 121) {
+			console.log(
+				err.errorResponse.errmsg
+			);
+			res.status(400).json({ error: err.errorResponse.errmsg });
+		} else {
+			next(err);
+		}
 	}
 });
 
