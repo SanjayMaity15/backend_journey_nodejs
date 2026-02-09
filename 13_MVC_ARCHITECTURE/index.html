@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Mongoose Commands Cheat Sheet</h1>
+    <p>A quick reference for commonly used <strong>Mongoose queries and operations</strong>.</p>
+    
+    <table style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr style="background-color: #4CAF50; color: white; text-align: left;">
+                <th style="border: 1px solid #ddd; padding: 8px;">Operation</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Command / Method</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Description</th>
+                <th style="border: 1px solid #ddd; padding: 8px;">Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color: #f2f2f2;">
+                <td rowspan="3"><strong>Create</strong></td>
+                <td><code>create()</code></td>
+                <td>Quickly creates and saves a new document</td>
+                <td><code>const user = await User.create({ username: "Alice", email: "alice@example.com" });</code></td>
+            </tr>
+            <tr>
+                <td><code>save()</code></td>
+                <td>Create document instance first, then save</td>
+                <td><code>const user = new User({ username: "Bob" }); await user.save();</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>insertMany()</code></td>
+                <td>Insert multiple documents at once</td>
+                <td><code>await User.insertMany([{ username: "Charlie" }, { username: "Dave" }]);</code></td>
+            </tr>
+    
+            <tr>
+                <td rowspan="4"><strong>Read</strong></td>
+                <td><code>find()</code></td>
+                <td>Get all matching documents</td>
+                <td><code>const users = await User.find({ age: { $gte: 18 } });</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>findOne()</code></td>
+                <td>Get first matching document</td>
+                <td><code>const user = await User.findOne({ username: "Alice" });</code></td>
+            </tr>
+            <tr>
+                <td><code>findById()</code></td>
+                <td>Get a document by <code>_id</code></td>
+                <td><code>const user = await User.findById("64xx1234567890abcdef");</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>countDocuments()</code></td>
+                <td>Count documents matching query</td>
+                <td><code>const count = await User.countDocuments({ age: { $gte: 18 } });</code></td>
+            </tr>
+    
+            <tr>
+                <td rowspan="3"><strong>Update</strong></td>
+                <td><code>updateOne()</code></td>
+                <td>Update first matching document</td>
+                <td><code>await User.updateOne({ username: "Alice" }, { $set: { age: 26 } });</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>updateMany()</code></td>
+                <td>Update all matching documents</td>
+                <td><code>await User.updateMany({ age: { $lt: 18 } }, { $set: { status: "minor" } });</code></td>
+            </tr>
+            <tr>
+                <td><code>findByIdAndUpdate()</code></td>
+                <td>Update by <code>_id</code> and return new doc</td>
+                <td><code>const updated = await User.findByIdAndUpdate(id, { age: 30 }, { new: true });</code></td>
+            </tr>
+    
+            <tr style="background-color: #f2f2f2;">
+                <td rowspan="3"><strong>Delete</strong></td>
+                <td><code>deleteOne()</code></td>
+                <td>Delete first matching document</td>
+                <td><code>await User.deleteOne({ username: "Alice" });</code></td>
+            </tr>
+            <tr>
+                <td><code>deleteMany()</code></td>
+                <td>Delete all matching documents</td>
+                <td><code>await User.deleteMany({ status: "inactive" });</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>findByIdAndDelete()</code></td>
+                <td>Delete document by <code>_id</code></td>
+                <td><code>await User.findByIdAndDelete(id);</code></td>
+            </tr>
+    
+            <tr>
+                <td rowspan="6"><strong>Other / Query Helpers</strong></td>
+                <td><code>sort()</code></td>
+                <td>Sort results</td>
+                <td><code>const users = await User.find().sort({ createdAt: -1 });</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>limit()</code></td>
+                <td>Limit number of results</td>
+                <td><code>const users = await User.find().limit(10);</code></td>
+            </tr>
+            <tr>
+                <td><code>skip()</code></td>
+                <td>Skip documents (pagination)</td>
+                <td><code>const users = await User.find().skip(10).limit(5);</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>populate()</code></td>
+                <td>Fill referenced fields</td>
+                <td><code>const posts = await Post.find().populate("author");</code></td>
+            </tr>
+            <tr>
+                <td><code>distinct()</code></td>
+                <td>Get unique field values</td>
+                <td><code>const emails = await User.distinct("email");</code></td>
+            </tr>
+            <tr style="background-color: #f2f2f2;">
+                <td><code>aggregate()</code></td>
+                <td>Advanced queries (group, sum, etc.)</td>
+                <td><code>const result = await User.aggregate([{ $match: { age: { $gte: 18 } } }, { $group: { _id: null,
+                        avgAge: { $avg: "$age" } } }]);</code></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2>Tips</h2>
+    <ul>
+        <li>Use <strong>async/await</strong> for cleaner, readable code.</li>
+        <li>Use <code>.lean()</code> for faster reads when full Mongoose document methods are not needed.
+            <pre><code>const users = await User.find().lean();</code></pre>
+        </li>
+        <li>Handle errors like duplicate keys (<code>err.code === 11000</code>) to avoid crashes.</li>
+        <li>Use <code>populate()</code> for references between schemas.</li>
+        <li><code>insertMany()</code> is faster than multiple <code>create()</code> calls for bulk inserts.</li>
+    </ul>
+
+</body>
+</html>

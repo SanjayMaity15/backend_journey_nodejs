@@ -1,10 +1,14 @@
 import { ObjectId } from "mongodb";
+import Todo from "../model/todoModel.js";
 
 export const addTodo = async (req, res) => {
-  const todo = req.body;
+  const { title, isCompleted } = req.body;
+  console.log(title, isCompleted)
   try {
-    const result = await req.db.collection("todos").insertOne(todo);
-    res.status(201).json(result);
+    const todo = await Todo.create({ title, isCompleted })
+    res.status(201).json({
+      message: "Todo created"
+    })
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to create todo" });
@@ -13,8 +17,11 @@ export const addTodo = async (req, res) => {
 
 export const getAllTodos = async (req, res) => {
   try {
-    const todos = await req.db.collection("todos").find().toArray();
-    res.status(200).json(todos);
+    const todos = await Todo.find()
+    res.status(200).json({
+      message: "Todo fetch successfully",
+      todos
+    })
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch todos" });
   }
@@ -22,10 +29,12 @@ export const getAllTodos = async (req, res) => {
 
 export const getTodoById = async (req, res) => {
   try {
-    const todos = await req.db
-      .collection("todos")
-      .findOne({ _id: new ObjectId(req.params.id) });
-    res.status(200).json(todos);
+    const { id } = req.params;
+    const todo = await Todo.findById({_id:id})
+    res.status(200).json({
+      message: "Todo find successfully",
+      todo
+    })
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Failed to fetch todos" });
@@ -34,15 +43,11 @@ export const getTodoById = async (req, res) => {
 
 export const updateTodo = async (req, res) => {
   const { id } = req.params;
-  const updatedTodo = req.body;
+  const {title, isCompleted} = req.body;
   try {
-    const result = await req.db
-      .collection("todos")
-      .updateOne({ _id: new ObjectId(id) }, { $set: updatedTodo });
-    if (result.modifiedCount === 0) {
-      return res.status(404).json({ error: "Not updated" });
-    }
-    res.status(200).json({ message: "Todo updated successfully" });
+    const result = await Todo.findByIdAndUpdate({_id:id}, {title, isCompleted}, {new: true})
+
+    res.status(200).json({ message: "Todo updated successfully", result });
   } catch (error) {
     res.status(500).json({ error: "Failed to update todo" });
   }
@@ -51,12 +56,7 @@ export const updateTodo = async (req, res) => {
 export const deleteTodo = async (req, res) => {
   const { id } = req.params;
   try {
-    const result = await req.db
-      .collection("todos")
-      .deleteOne({ _id: new ObjectId(id) });
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: "Todo not found" });
-    }
+    const result = await Todo.findByIdAndDelete({_id: id})
     res.status(200).json({ message: "Todo deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Failed to delete todo" });
