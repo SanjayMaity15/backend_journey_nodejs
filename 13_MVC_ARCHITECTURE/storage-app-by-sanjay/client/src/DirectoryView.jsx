@@ -75,13 +75,13 @@ function DirectoryView() {
 
       await handleFetchErrors(response);
       const data = await response.json();
-
+      console.log(data)
       // Set directory name
-      setDirectoryName(dirId ? data.name : "My Drive");
+      // setDirectoryName(dirId ? data.name : "My Drive");
 
       // Reverse directories and files so new items show on top
-      setDirectoriesList([...data.directories].reverse());
-      setFilesList([...data.files].reverse());
+      setDirectoriesList(data.directories);
+      setFilesList(data.files);
     } catch (error) {
       setErrorMessage(error.message);
     }

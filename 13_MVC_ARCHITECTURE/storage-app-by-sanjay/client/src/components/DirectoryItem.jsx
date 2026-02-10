@@ -44,7 +44,7 @@ function DirectoryItem({
     }
   }
 
-  const isUploadingItem = item.id.startsWith("temp-");
+  const isUploadingItem = item._id.startsWith("temp-");
 
   return (
     <div

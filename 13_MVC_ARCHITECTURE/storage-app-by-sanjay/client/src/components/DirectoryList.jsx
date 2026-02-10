@@ -15,14 +15,17 @@ function DirectoryList({
   openRenameModal,
   BASE_URL,
 }) {
+
+  console.log(items)
+
   return (
     <div className="directory-list">
-      {items.map((item) => {
-        const uploadProgress = progressMap[item.id] || 0;
+      {items?.map((item) => {
+        const uploadProgress = progressMap[item._id] || 0;
 
         return (
           <DirectoryItem
-            key={item.id}
+            key={item._id}
             item={item}
             handleRowClick={handleRowClick}
             activeContextMenu={activeContextMenu}

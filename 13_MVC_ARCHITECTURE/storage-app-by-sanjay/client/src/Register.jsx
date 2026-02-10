@@ -56,7 +56,7 @@ const Register = () => {
         // Registration success
         setIsSuccess(true);
         setTimeout(() => {
-          navigate("/");
+          navigate("/login");
         }, 2000);
       }
     } catch (error) {

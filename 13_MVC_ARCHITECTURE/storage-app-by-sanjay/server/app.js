@@ -2,15 +2,13 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import directoryRoutes from "./routes/directoryRoutes.js";
-import fileRoutes from "./routes/fileRoutes.js";
+// import fileRoutes from "./routes/fileRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
-import checkAuth from "./middlewares/authMiddleware.js";
+
 import { connectDB } from "./config/dbConnedtion.js";
 
 try {
-	const db = await connectDB();
-  console.log(db.namespace);
-  console.log("DB connected")
+	
 
 	const app = express();
 
@@ -23,12 +21,9 @@ try {
 		}),
 	);
 
-  app.use((req, res, next) => {
-    req.db = db;
-    next()
-  })
-	app.use("/directory", checkAuth, directoryRoutes);
-	app.use("/file", checkAuth, fileRoutes);
+
+	app.use("/directory", directoryRoutes);
+	// app.use("/file", checkAuth, fileRoutes);
 	app.use("/user", userRoutes);
 
 	app.use((err, req, res, next) => {
@@ -38,7 +33,12 @@ try {
 		});
 	});
 
+	app.get("/", (req, res) => {
+		res.send("Server is running")
+	})
+
 	app.listen(4000, () => {
+		connectDB()
 		console.log(`Server Started`);
 	});
 } catch (error) {
