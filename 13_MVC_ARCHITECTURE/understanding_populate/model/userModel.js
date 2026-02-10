@@ -6,7 +6,26 @@ const userSchema = new Schema({
     },
 
 
+}, {
+    strict: "throw",
+    timestamps: true,
+    // virtuals: {
+    //     upperCaseName() {
+    //         return this.name.toUpperCase()
+    //     }
+    // }
 })
+
+
+// ✅ Define virtual correctly
+
+userSchema.virtual("upperCaseName").set(function (value) {
+  return this.name = this.name + value;
+});
+
+userSchema.virtual("upperCaseName").get(function () {
+	return this.name?.toUpperCase();
+});
 
 const User = model("User", userSchema)
 export default User;

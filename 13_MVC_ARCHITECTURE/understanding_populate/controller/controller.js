@@ -14,6 +14,23 @@ export const createUser = async (req, res) => {
     }
 }
 
+export const getUser = async (req, res) => {
+    try {
+        const { name } = req.body;
+       const user =  await User.findOne({ name })
+        res.status(201).json({
+            messgage: "User created successfully",
+            user
+        })
+        console.log(user.schema.virtuals)
+        user.upperCaseName = " op"
+        console.log(user.upperCaseName)
+        await user.save()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 export const createPost = async (req, res) => {
