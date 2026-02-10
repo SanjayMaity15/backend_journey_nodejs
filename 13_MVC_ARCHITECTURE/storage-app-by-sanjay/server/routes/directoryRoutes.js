@@ -5,7 +5,7 @@ import { rm } from "fs/promises";
 // import validateIdMiddleware from "../middlewares/validateIdMiddleware.js";
 import { ObjectId } from "mongodb";
 import checkAuth from "../middlewares/authMiddleware.js";
-import { getDirectoryData } from "../controller/directoryController.js";
+import { createDirectory, deleteDirectory, getDirectoryData, renameDirectory } from "../controller/directoryController.js";
 
 const router = express.Router();
 
@@ -15,124 +15,10 @@ const router = express.Router();
 // Read
 router.get("/:id?", checkAuth, getDirectoryData);
 
-// router.post("/:parentDirId?", async (req, res, next) => {
-// 	const user = req.user;
-// 	const _id = req.params.parentDirId
-// 		? new ObjectId(req.params.parentDirId)
-// 		: user.rootDirId;
-// 	const dirname = req.headers.dirname || "New Folder";
-// 	const db = req.db;
+router.post("/:parentDirId?", checkAuth, createDirectory );
 
-// 	try {
-// 		const parentDir = await db.collection("directories").findOne({ _id });
+router.patch("/:id", checkAuth, renameDirectory);
 
-// 		if (!parentDir)
-// 			return res
-// 				.status(404)
-// 				.json({ message: "Parent Directory Does not exist!" });
-
-// 		await db.collection("directories").insertOne({
-// 			name: dirname,
-// 			parentDirId: _id,
-// 			userId: user._id,
-// 		});
-// 		return res.status(200).json({ message: "Directory Created!" });
-// 	} catch (err) {
-// 		next(err);
-// 	}
-// });
-
-// router.patch("/:id", async (req, res, next) => {
-// 	const user = req.user;
-// 	const { id } = req.params;
-// 	const { newDirName } = req.body;
-// 	const db = req.db;
-
-// 	try {
-// 		const dirData = await db.collection("directories").updateOne(
-// 			{
-// 				_id: new ObjectId(id),
-// 				userId: user._id,
-// 			},
-// 			{
-// 				$set: { name: newDirName },
-// 			},
-// 		);
-
-// 		res.status(200).json({ message: "Directory Renamed!" });
-// 	} catch (err) {
-// 		next(err);
-// 	}
-// });
-
-// router.delete("/:id", async (req, res, next) => {
-// 	const user = req.user;
-// 	const { id } = req.params;
-// 	const db = req.db;
-// 	const dirObjId = new ObjectId(id);
-
-// 	const deleteDirectory = await db.collection("directories").findOne({
-// 		_id: dirObjId,
-// 		userId: req.user._id,
-// 	});
-
-// 	if (!deleteDirectory) {
-// 		return res.status(404).json({
-// 			message: "Directory not found",
-// 		});
-// 	}
-
-// 	async function directoryContent(id) {
-// 		let dirInTheDirectory = await db
-// 			.collection("directories")
-// 			.find({ parentDirId: id }, { projection: { _id: 1 } })
-// 			.toArray();
-
-// 		let filesInTheDirectory = await db
-// 			.collection("files")
-// 			.find({ parentDirId: id }, { projection: { _id: 1, extension: 1 } })
-// 			.toArray();
-
-// 		for (const dir of dirInTheDirectory) {
-// 			const {
-// 				dirInTheDirectory: childDir,
-// 				filesInTheDirectory: childFile,
-// 			} = await directoryContent(dir._id);
-
-// 			dirInTheDirectory.push(...childDir);
-// 			filesInTheDirectory.push(...childFile);
-// 		}
-
-// 		return { dirInTheDirectory, filesInTheDirectory };
-// 	}
-
-
-// 	const { dirInTheDirectory, filesInTheDirectory } =
-// 		await directoryContent(dirObjId);
-
-// 	/* delete files from disk */
-// 	for (const file of filesInTheDirectory) {
-// 		await rm(`./storage/${file._id}${file.extension}`);
-// 	}
-
-// 	/* delete files from DB */
-// 	if (filesInTheDirectory.length) {
-// 		await db.collection("files").deleteMany({
-// 			_id: { $in: filesInTheDirectory.map((f) => f._id) },
-// 		});
-// 	}
-
-// 	/* delete directories (children + root) */
-// 	const allDirIds = [...dirInTheDirectory.map((d) => d._id), dirObjId];
-
-// 	await db.collection("directories").deleteMany({
-// 		_id: { $in: allDirIds },
-// 	});
-
-
-// 	return res.status(200).json({
-// 		message : "Successfully delete directory"
-// 	})
-// });
+router.delete("/:id", checkAuth, deleteDirectory);
 
 export default router;

@@ -355,6 +355,7 @@ function DirectoryView() {
    * Context Menu
    */
   function handleContextMenu(e, id) {
+    console.log(id)
     e.stopPropagation();
     e.preventDefault();
     const clickX = e.clientX;

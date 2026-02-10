@@ -45,64 +45,74 @@ function DirectoryItem({
   }
 
   const isUploadingItem = item._id.startsWith("temp-");
-
+  
   return (
-    <div
-      className="list-item hoverable-row"
-      onClick={() =>
-        !(activeContextMenu || isUploading)
-          ? handleRowClick(item.isDirectory ? "directory" : "file", item.id)
-          : null
-      }
-      onContextMenu={(e) => handleContextMenu(e, item.id)}
-    >
-      <div className="item-left-container">
-        <div className="item-left">
-          {item.isDirectory ? (
-            <FaFolder className="folder-icon" />
-          ) : (
-            renderFileIcon(getFileIcon(item.name))
-          )}
-          <span>{item.name}</span>
-        </div>
+		<div
+			className="list-item hoverable-row"
+			onClick={() =>
+				!(activeContextMenu || isUploading)
+					? handleRowClick(
+							item.isDirectory ? "directory" : "file",
+							item._id,
+						)
+					: null
+			}
+			onContextMenu={(e) => handleContextMenu(e, item._id)}
+		>
+			<div className="item-left-container">
+				<div className="item-left">
+					{item.isDirectory ? (
+						<FaFolder className="folder-icon" />
+					) : (
+						renderFileIcon(getFileIcon(item.name))
+					)}
+					{item.isDirectory ? (
+						<span>{item.directoryName}</span>
+					) : (
+						<span>{item.name}</span>
+					)}
+				</div>
 
-        {/* Three dots for context menu */}
-        <div
-          className="context-menu-trigger"
-          onClick={(e) => handleContextMenu(e, item.id)}
-        >
-          <BsThreeDotsVertical />
-        </div>
-      </div>
+				{/* Three dots for context menu */}
+				<div
+					className="context-menu-trigger"
+					onClick={(e) => handleContextMenu(e, item._id)}
+				>
+					<BsThreeDotsVertical />
+				</div>
+			</div>
 
-      {/* PROGRESS BAR: shown if an item is in queue or actively uploading */}
-      {isUploadingItem && (
-        <div className="progress-container">
-          <span className="progress-value">{Math.floor(uploadProgress)}%</span>
-          <div
-            className="progress-bar"
-            style={{
-              width: `${uploadProgress}%`,
-              backgroundColor: uploadProgress === 100 ? "#039203" : "#007bff",
-            }}
-          ></div>
-        </div>
-      )}
+			{/* PROGRESS BAR: shown if an item is in queue or actively uploading */}
+			{isUploadingItem && (
+				<div className="progress-container">
+					<span className="progress-value">
+						{Math.floor(uploadProgress)}%
+					</span>
+					<div
+						className="progress-bar"
+						style={{
+							width: `${uploadProgress}%`,
+							backgroundColor:
+								uploadProgress === 100 ? "#039203" : "#007bff",
+						}}
+					></div>
+				</div>
+			)}
 
-      {/* Context menu, if active */}
-      {activeContextMenu === item.id && (
-        <ContextMenu
-          item={item}
-          contextMenuPos={contextMenuPos}
-          isUploadingItem={isUploadingItem}
-          handleCancelUpload={handleCancelUpload}
-          handleDeleteFile={handleDeleteFile}
-          handleDeleteDirectory={handleDeleteDirectory}
-          openRenameModal={openRenameModal}
-          BASE_URL={BASE_URL}
-        />
-      )}
-    </div>
+			{/* Context menu, if active */}
+			{activeContextMenu === item._id && (
+				<ContextMenu
+					item={item}
+					contextMenuPos={contextMenuPos}
+					isUploadingItem={isUploadingItem}
+					handleCancelUpload={handleCancelUpload}
+					handleDeleteFile={handleDeleteFile}
+					handleDeleteDirectory={handleDeleteDirectory}
+					openRenameModal={openRenameModal}
+					BASE_URL={BASE_URL}
+				/>
+			)}
+		</div>
   );
 }
 
