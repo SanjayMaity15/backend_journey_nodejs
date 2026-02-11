@@ -3,8 +3,11 @@ import User from "../model/userModel.js";
 
 export const createUser = async (req, res) => {
     try {
-        const { name } = req.body;
-       const user =  await User.create({ name })
+        // const { name, age } = req.body;
+       const user = await User.insertMany([
+			{ name: "Sanjay", age: 24 },
+			{ name: "maity", age: 14 },
+		]);
         res.status(201).json({
             messgage: "User created successfully",
             user
