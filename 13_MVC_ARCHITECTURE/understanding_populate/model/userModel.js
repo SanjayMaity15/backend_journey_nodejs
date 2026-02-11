@@ -16,6 +16,7 @@ const userSchema = new Schema(
 	{
 		strict: "throw",
 		timestamps: true,
+		optimisticConcurrency: true
 		// virtuals: {
 		//     upperCaseName() {
 		//         return this.name.toUpperCase()
@@ -49,19 +50,19 @@ const userSchema = new Schema(
 // These are model middleware it like document middleware but here we can insert multiple dcoument like insertmany is a model middleware
 
 
-userSchema.pre("insertMany", function (docx) {
-	console.log("Model middleware")
-	docx.forEach(element => {
-		element.isAdult = element.age >= 18;
-	});
-})
+// userSchema.pre("insertMany", function (docx) {
+// 	console.log("Model middleware")
+// 	docx.forEach(element => {
+// 		element.isAdult = element.age >= 18;
+// 	});
+// })
 
-userSchema.post("insertMany", function (docx) {
-	console.log("Model middleware")
-	docx.forEach(element => {
-		console.log(element)
-	});
-})
+// userSchema.post("insertMany", function (docx) {
+// 	console.log("Model middleware")
+// 	docx.forEach(element => {
+// 		console.log(element)
+// 	});
+// })
 
 
 const User = model("User", userSchema);

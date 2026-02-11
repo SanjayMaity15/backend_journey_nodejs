@@ -1,23 +1,21 @@
-import express from "express";
-import checkAuth from "../middlewares/authMiddleware.js";
-import { ObjectId } from "mongodb";
 import User from "../model/userModel.js";
 import Directory from "../model/directoryModel.js";
+import { Types } from "mongoose";
 
 export const signup = async (req, res, next) => {
 	const { name, email, password } = req.body;
 	console.log(req.body);
-	const foundUser = await User.findOne({ email });
-	if (foundUser) {
-		return res.status(409).json({
-			error: "User already exists",
-			message:
-				"A user with this email address already exists. Please try logging in or use a different email.",
-		});
-	}
+	// const foundUser = await User.findOne({ email });
+	// if (foundUser) {
+	// 	return res.status(409).json({
+	// 		error: "User already exists",
+	// 		message:
+	// 			"A user with this email address already exists. Please try logging in or use a different email.",
+	// 	});
+	// }
 	try {
-		const rootDirId = new ObjectId();
-		const userId = new ObjectId();
+		const rootDirId = new Types.ObjectId();
+		const userId = new Types.ObjectId();
 
 		const createdUser = await User.create({
 			_id: userId,
@@ -41,8 +39,13 @@ export const signup = async (req, res, next) => {
 		});
 	} catch (err) {
 		if (err.code === 121) {
-			console.log(err.errorResponse.errmsg);
 			res.status(400).json({ error: err.errorResponse.errmsg });
+		} else if (err.code === 11000) {
+			if (err.keyValue.email) {
+				res.status(409).json({
+					error: "User is already exist with this email",
+				});
+			}
 		} else {
 			next(err);
 		}
@@ -77,7 +80,6 @@ export const getCurrentUser = async (req, res) => {
 		console.log(error);
 	}
 };
-
 
 export const handleLogout = async (req, res) => {
 	try {

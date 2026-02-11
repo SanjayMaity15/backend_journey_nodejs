@@ -10,6 +10,7 @@ const userSchema = new Schema({
 		type: String,
 		required: true,
 		lowercase: true,
+		unique: true,
 		trim: true,
 		match: [
 			/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
