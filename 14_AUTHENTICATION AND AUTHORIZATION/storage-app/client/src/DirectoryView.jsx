@@ -75,13 +75,13 @@ function DirectoryView() {
 
       await handleFetchErrors(response);
       const data = await response.json();
-      console.log(data)
+
       // Set directory name
-      // setDirectoryName(dirId ? data.name : "My Drive");
+      setDirectoryName(dirId ? data.name : "My Drive");
 
       // Reverse directories and files so new items show on top
-      setDirectoriesList(data.directories);
-      setFilesList(data.files);
+      setDirectoriesList([...data.directories].reverse());
+      setFilesList([...data.files].reverse());
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -355,7 +355,6 @@ function DirectoryView() {
    * Context Menu
    */
   function handleContextMenu(e, id) {
-    console.log(id)
     e.stopPropagation();
     e.preventDefault();
     const clickX = e.clientX;
