@@ -1,9 +1,13 @@
 import crypto from "crypto"
+import { readFile } from "fs/promises";
+
+const fileContent = await readFile("file.txt")
+const newFileContent = `blob ${fileContent.length}\0${fileContent}`
 
 const hashValue = crypto
-	.createHash("sha256")
+	.createHash("sha1")
 	.update(
-		"E:\\BACKEND-PROCODRR-SERIES-26\\14_AUTHENTICATION AND AUTHORIZATION\\hashing\\file.txt",
+        newFileContent
 	)
 	.digest("hex");
 console.log(hashValue)
