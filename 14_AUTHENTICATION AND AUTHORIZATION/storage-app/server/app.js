@@ -6,11 +6,11 @@ import fileRoutes from "./routes/fileRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import checkAuth from "./middlewares/authMiddleware.js";
 import { connectDB } from "./config/db.js";
-
+export const my_secret = "sanjay-maity";
 await connectDB();
 
 const app = express();
-app.use(cookieParser());
+app.use(cookieParser(my_secret));
 app.use(express.json());
 app.use(
   cors({
