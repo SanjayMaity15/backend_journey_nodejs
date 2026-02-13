@@ -1,0 +1,8 @@
+Certificate Name: Example Certificate
+Issued To: Sanjay Maity
+Issued By: Test Authority
+Date of Issue: 2026-02-13
+Valid Until: 2027-02-13
+Purpose: Authentication and Verification
+Notes: This certificate is for testing purposes only.
+Certificate ID: 
