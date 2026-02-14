@@ -2,6 +2,7 @@ import Directory from "../models/directoryModel.js";
 import User from "../models/userModel.js";
 import  { Types } from "mongoose";
 import crypto from "crypto";
+import bcrypt from "bcrypt"
 
 
 export const register = async (req, res, next) => {
@@ -9,10 +10,10 @@ export const register = async (req, res, next) => {
 	// const session = await mongoose.startSession();
   // const hashedPassword = crypto.createHash("sha256").update(password).digest("hex")
   
-    const salt = crypto.randomBytes(16).toString("base64url")
-    const hashedPassword = crypto.pbkdf2Sync(password, salt, 100000, 32, "sha256").toString("base64url")
+    
+    const hashedPassword = await bcrypt.hash(password, 10)
   
-    const finalHashedPassword = salt +"."+ hashedPassword
+    
   
 	try {
 		const rootDirId = new Types.ObjectId();
@@ -35,7 +36,7 @@ export const register = async (req, res, next) => {
 				_id: userId,
 				name,
 				email,
-				password:finalHashedPassword,
+				password:hashedPassword,
 				rootDirId,
 			},
 			// { session }
@@ -74,18 +75,20 @@ export const login = async (req, res, next) => {
 		return res.status(404).json({ error: "Invalid Credentials" });
 	}
 
-  const [salt, savedPass] = user.password.split(".")
+  
 
-  const enterHashedPass = crypto.pbkdf2Sync(password, salt, 100000, 32, "sha256").toString("base64url")
+//   const enterHashedPass = crypto.pbkdf2Sync(password, salt, 100000, 32, "sha256").toString("base64url")
 
 	// res.cookie("uid", user._id.toString() + (Date.now() + (1 * 60 * 1000)).toString(16), {
 	//   httpOnly: true,
 	//   maxAge: 3 * 60 * 1000,
 	// });
 
-  console.log({savedPass, enterHashedPass});
+	//   console.log({savedPass, enterHashedPass});
+	
+	const isCorrewctPassword = await bcrypt.compare(password, user.password)
 
-  if (savedPass !== enterHashedPass) {
+  if (!isCorrewctPassword) {
     return res.status(404).json({error: "Invalid credential"})
   }
 

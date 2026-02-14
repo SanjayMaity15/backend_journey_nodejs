@@ -4,7 +4,8 @@ import crypto from "crypto";``
 
 export default async function checkAuth(req, res, next) {
 	const { token } = req.signedCookies;
-	
+	console.log(req.cookies);
+	console.log(req.signedCookies);
 	
 	if (!token) {
 		return res.status(401).json({ error: "Not logged!" });
