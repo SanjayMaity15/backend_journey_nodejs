@@ -6,19 +6,27 @@ const router = express.Router();
 
 // GET all courses
 router.get("/", async (req, res) => {
-	const { sid } = req.signedCookies;
-
 	try {
-		const courses = await Course.find();
+		const { sid } = req.signedCookies;
 
-		if (!sid) {
-			const createGuestSesssion = await Session.create({});
-			res.cookie("sid", createGuestSesssion.id, {
+		let session = null;
+
+		if (sid) {
+			session = await Session.findById(sid);
+		}
+
+		// যদি session না থাকে → guest session বানাও
+		if (!session) {
+			session = await Session.create({});
+
+			res.cookie("sid", session._id.toString(), {
 				httpOnly: true,
-				maxAge: 30* 24* 60 * 60 * 1000,
+				maxAge: 30 * 24 * 60 * 60 * 1000,
 				signed: true,
 			});
 		}
+
+		const courses = await Course.find();
 
 		res.json(courses);
 	} catch (error) {

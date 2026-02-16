@@ -9,6 +9,7 @@ export default function Cart() {
 
 	async function fetchCartData() {
 		const data = await getCartItems();
+		console.log(data)
 		setCart(data);
 	}
 

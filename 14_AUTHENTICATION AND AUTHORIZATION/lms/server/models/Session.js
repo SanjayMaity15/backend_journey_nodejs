@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema({
+	userId: {
+		type: mongoose.Schema.Types.ObjectId,
+		default: null
+	},	
 	data: {
 		type: mongoose.Schema.Types.Mixed,
 		default: {
@@ -9,7 +13,7 @@ const sessionSchema = new mongoose.Schema({
 	},
 	expiresIn: {
 		type: Number,
-		default: Date.now() + 30*24*60 * 60 * 1000,
+		default: Date.now() + 30 * 24 * 60 * 60 * 1000,
 	},
 });
 
