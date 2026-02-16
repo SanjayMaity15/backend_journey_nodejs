@@ -1,20 +1,15 @@
 import Directory from "../models/directoryModel.js";
 import User from "../models/userModel.js";
-import  { Types } from "mongoose";
+import { Types } from "mongoose";
 import crypto from "crypto";
-import bcrypt from "bcrypt"
-
+import bcrypt from "bcrypt";
+import Session from "../models/sessionModel.js";
 
 export const register = async (req, res, next) => {
 	const { name, email, password } = req.body;
-	// const session = await mongoose.startSession();
-  // const hashedPassword = crypto.createHash("sha256").update(password).digest("hex")
-  
-    
-    const hashedPassword = await bcrypt.hash(password, 10)
-  
-    
-  
+
+	const hashedPassword = await bcrypt.hash(password, 10);
+
 	try {
 		const rootDirId = new Types.ObjectId();
 		const userId = new Types.ObjectId();
@@ -36,7 +31,7 @@ export const register = async (req, res, next) => {
 				_id: userId,
 				name,
 				email,
-				password:hashedPassword,
+				password: hashedPassword,
 				rootDirId,
 			},
 			// { session }
@@ -66,52 +61,35 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
-  const { email, password } = req.body;
-  
-  
+	const { email, password } = req.body;
 
 	const user = await User.findOne({ email });
 	if (!user) {
 		return res.status(404).json({ error: "Invalid Credentials" });
 	}
 
-  
+	const isCorrewctPassword = await bcrypt.compare(password, user.password);
 
-//   const enterHashedPass = crypto.pbkdf2Sync(password, salt, 100000, 32, "sha256").toString("base64url")
+	if (!isCorrewctPassword) {
+		return res.status(404).json({ error: "Invalid credential" });
+	}
 
-	// res.cookie("uid", user._id.toString() + (Date.now() + (1 * 60 * 1000)).toString(16), {
-	//   httpOnly: true,
-	//   maxAge: 3 * 60 * 1000,
-	// });
+	const allLoggedInSessionDevices = await Session.find({ userId: user._id });
 
-	//   console.log({savedPass, enterHashedPass});
-	
-	const isCorrewctPassword = await bcrypt.compare(password, user.password)
+	if (allLoggedInSessionDevices.length >= 2) {
+		await allLoggedInSessionDevices[0].deleteOne();
+	}
 
-  if (!isCorrewctPassword) {
-    return res.status(404).json({error: "Invalid credential"})
-  }
-
-	const cookiePayload = JSON.stringify({
-		id: user._id,
-		expiryTime: Date.now() + 2 * 60 * 1000,
-	});
-
-	// const signature = crypto
-	// 	.createHmac("sha256", my_secret)
-	// 	.update(cookiePayload)
-	// 	.digest("base64url");
-
-	// const signedToken = `${Buffer.from(cookiePayload).toString("base64url")}.${signature}`;
+	const session = await Session.create({ userId: user._id });
 
 	res.cookie(
-		"token",
-    Buffer.from(cookiePayload).toString("base64url"),
-    
+		"sid",
+
+		session._id,
 		{
-      httpOnly: true,
-      signed: true,
-			maxAge: 3 * 60 * 1000,
+			httpOnly: true,
+			signed: true,
+			maxAge: 2 * 60 * 1000,
 		},
 	);
 
@@ -125,7 +103,22 @@ export const getCurrentUser = (req, res) => {
 	});
 };
 
-export const logout = (req, res) => {
-	res.clearCookie("token");
+export const logout = async (req, res) => {
+	const { sid } = req.signedCookies;
+
+	await Session.findByIdAndDelete(sid);
+	res.clearCookie("sid");
+	res.status(204).end();
+};
+
+export const logoutAllDevices = async (req, res) => {
+	const { sid } = req.signedCookies;
+
+	const allDevicesSession = await Session.find({ userId: req.user._id });
+
+	const sessionIds = allDevicesSession.map((session) => session._id);
+
+	const result = await Session.deleteMany({_id : {$in: sessionIds}})
+	console.log(result)
 	res.status(204).end();
 };

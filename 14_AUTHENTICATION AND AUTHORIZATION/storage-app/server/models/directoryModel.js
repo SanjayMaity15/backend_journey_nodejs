@@ -15,9 +15,6 @@ const directorySchema = new Schema(
       default: null,
       ref: "Directory",
     },
-  },
-  {
-    strict: "throw",
   }
 );
 

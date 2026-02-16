@@ -18,10 +18,8 @@ const fileSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Directory",
     },
-  },
-  {
-    strict: "throw",
   }
+
 );
 
 const File = model("File", fileSchema);
