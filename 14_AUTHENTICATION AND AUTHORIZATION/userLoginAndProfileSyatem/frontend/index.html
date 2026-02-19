@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>This is Home Page</h1>
+
+    <div id="container">
+
+    </div>
+
+    <button id="btn">Login With Google</button>
+
+
+    <script>
+        let clientId;
+        const redirectUri = "http://localhost:8000/auth/google"; // backend URL
+        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&scope=openid%20email%20profile&redirect_uri=${redirectUri}`;
+
+        document.getElementById("btn").addEventListener("click", () => {
+            // open Google login in popup
+            window.open(authUrl, "google-login", "width=500,height=600");
+        });
+
+        // Listen for messages from popup (after backend sends user info)
+        window.addEventListener("message", (e) => {
+            if (!e.data || e.data.type !== "GOOGLE_AUTH") return;
+
+            const user = e.data.user;
+            console.log(user)
+            const container = document.getElementById("container");
+
+            const nameEl = document.createElement("h2");
+            nameEl.textContent = user.name;
+
+            const emailEl = document.createElement("p");
+            emailEl.textContent = user.email;
+
+            const pictureEl = document.createElement("img");
+            pictureEl.src = user.picture;
+            pictureEl.width = 100;
+
+            container.append(nameEl, emailEl, pictureEl);
+        });
+
+
+
+    </script>
+</body>
+</html>

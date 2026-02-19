@@ -1,4 +1,5 @@
-let clientId;
+let clientId
+
 let clientSecret;
 const redirectUrl = "http://localhost:5500/googleLogin.html";
 const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&scope=openid%20email%20profile&redirect_uri=${redirectUrl}`;
