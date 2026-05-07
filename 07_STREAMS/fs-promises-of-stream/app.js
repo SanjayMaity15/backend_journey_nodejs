@@ -9,4 +9,4 @@ const readStream = readFileHandle.createReadStream({ highWaterMark: 1024 * 1024 
 
 const writeStream = writeFileHandle.createWriteStream({ highWaterMark: 1024 * 1024 })
 
-pipeline(readStream, writeStream)
+await pipeline(readStream, writeStream)

@@ -1,7 +1,8 @@
-let clientId
+let clientId 
 
-let clientSecret;
-const redirectUrl = "http://localhost:5500/googleLogin.html";
+
+let clientSecret
+const redirectUrl = "http://localhost:5500/callback.html";
 const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id=${clientId}&scope=openid%20email%20profile&redirect_uri=${redirectUrl}`;
 
 const btn = document.getElementById("btn");
@@ -49,9 +50,9 @@ async function fetchTokenId(code) {
 		return;
 	}
 	const userData = await data.json();
-	
+
 	const userToken = userData.id_token.split(".")[1];
 	const finalUserData = JSON.parse(atob(userToken));
-	
+
 	console.log(finalUserData);
 }

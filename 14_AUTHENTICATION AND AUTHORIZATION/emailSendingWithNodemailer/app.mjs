@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 
 const info = await transporter.sendMail({
 	from: '"Sanjay" <sanjaysanjaydummy118@gmail.com>',
-	to: "maitysanjay357@gmail.com",
+	to: "maitsanjay35@gmail.com",
 	subject: "Hello Sanjay ✔",
 	html: "<b>Hello world?</b>", // HTML version of the message
 });

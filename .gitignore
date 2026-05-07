@@ -1,11 +1,11 @@
-# Ignore node_modules everywhere
+# Node dependencies
 node_modules/
 
+# Environment files
+.env
+.env.*
 
-**/node_modules/
-
-
-node_modules/
+# Video files
 *.mp4
 *.mov
 *.webm

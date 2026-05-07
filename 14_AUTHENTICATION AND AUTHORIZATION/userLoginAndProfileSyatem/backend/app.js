@@ -1,50 +1,74 @@
 import express from "express";
 import cors from "cors";
+import { OAuth2Client } from "google-auth-library";
 
 const app = express();
 
 app.use(express.json());
 
-let CLIENT_ID;
+const CLIENT_ID =""
 
-let CLIENT_SECRET;
-const REDIRECT_URI = "http://localhost:8000/auth/google";
+const CLIENT_SECRET = ""
+const REDIRECT_URI = "";
 
-// This is the URL Google redirects to
+const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+
+app.get("/auth/google/authurl", (req, res) => {
+
+    
+	res.redirect(client.generateAuthUrl({scope: ["email", "profile", "openid"]}));
+	res.end();
+});
+
 app.get("/auth/google", async (req, res) => {
-	const code = req.query.code;
-	if (!code) return res.send("No code received");
+	const {code, error} = req.query;
+	if (error) {
+		return res.send(`
+            <script>
+                window.opener.postMessage(
+                    { type: 'GOOGLE_AUTH_ERROR', error: '${error}' },
+                    'http://localhost:5501'
+                );
+                window.close();
+            </script>
+        `);
+	}
+
+	if (!code) {
+		return res.send("No code received");
+	}
 
 	try {
-		const payload = `code=${code}&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}&grant_type=authorization_code`;
+		const { tokens } = await client.getToken(code);
 
-		const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
-			method: "POST",
-			headers: { "Content-Type": "application/x-www-form-urlencoded" },
-			body: payload,
+		const verifiedData = await client.verifyIdToken({
+			idToken: tokens.id_token,
+			audience: CLIENT_ID,
 		});
 
-		const tokenData = await tokenRes.json();
-
-		const idToken = tokenData.id_token;
-		const base64Payload = idToken.split(".")[1];
-
-		const userInfo = JSON.parse(
-			Buffer.from(base64Payload, "base64").toString("utf-8"),
-		);
+		const userInfo = verifiedData.getPayload();
 		console.log(userInfo);
+
 		res.send(`
-      <script>
-        window.opener.postMessage(
-          { type: 'GOOGLE_AUTH', user: ${JSON.stringify(userInfo)} },
-          'http://localhost:5501'
-        );
-        window.close();
-      </script>
-    `);
+        <script>
+            window.opener.postMessage(
+            { type: 'GOOGLE_AUTH', user: ${JSON.stringify(userInfo)} },
+            'http://localhost:5501'
+            );
+            window.close();
+        </script>
+        `);
 	} catch (err) {
 		console.error(err);
-		res.send("Error fetching user info");
+		res.send(`
+            <script>
+                window.opener.postMessage(
+                    { type: 'GOOGLE_AUTH_ERROR', error: 'Authentication failed' },
+                    'http://localhost:5501'
+                );
+                window.close();
+            </script>
+        `);
 	}
 });
 
