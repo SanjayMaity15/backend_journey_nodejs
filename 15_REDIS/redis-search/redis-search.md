@@ -59,6 +59,11 @@ FT.CREATE ageIdx ON JSON PREFIX 1 user: SCHEMA $.age AS age NUMERIC
 ```bash
 FT.CREATE nameIdx ON JSON PREFIX 1 user: SCHEMA $.name AS name TEXT
 ```
+### 🔹 Index on `name` field (as TEXT) and city field together
+
+```bash
+FT.CREATE userIdx ON JSON PREFIX 1 user: SCHEMA $.city AS city TEXT $.name AS name TEXT
+```
 
 ---
 
