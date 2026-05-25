@@ -261,7 +261,7 @@ Permissions
 
 ---
 
-## STEP 19 — Bucket Policy
+## STEP 19 — Bucket Policy not need this steps
 
 Click:
 
@@ -273,16 +273,16 @@ Paste:
 
 ```json id="l4w7pk"
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "PublicReadGetObject",
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::skyl.online/*"
-    }
-  ]
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "PublicReadGetObject",
+			"Effect": "Allow",
+			"Principal": "*",
+			"Action": "s3:GetObject",
+			"Resource": "arn:aws:s3:::skyl.online/*"
+		}
+	]
 }
 ```
 
@@ -439,10 +439,10 @@ Value
 
 Go to your DNS provider:
 
-* Cloudflare
-* Namecheap
-* GoDaddy
-* Route53
+- Cloudflare
+- Namecheap
+- GoDaddy
+- Route53
 
 Add provided CNAME records.
 
@@ -632,15 +632,15 @@ Paste:
 
 ```js id="c7n3vk"
 function handler(event) {
-    var request = event.request;
-    var uri = request.uri;
+	var request = event.request;
+	var uri = request.uri;
 
-    // If no file extension exists
-    if (!uri.includes('.')) {
-        request.uri = '/index.html';
-    }
+	// If no file extension exists
+	if (!uri.includes(".")) {
+		request.uri = "/index.html";
+	}
 
-    return request;
+	return request;
 }
 ```
 
@@ -833,4 +833,3 @@ CloudFront Function
    ↓
 S3 Bucket
 ```
-
