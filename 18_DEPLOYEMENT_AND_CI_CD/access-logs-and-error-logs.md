@@ -5,6 +5,7 @@ NGINX writes two main types of logs by default:
 1. **Access logs** → contain information about every request.
 2. **Error logs** → contain warnings, config errors, and runtime failures.
 
+
 ---
 
 ## 📁 1. Default Log File Locations (Linux)

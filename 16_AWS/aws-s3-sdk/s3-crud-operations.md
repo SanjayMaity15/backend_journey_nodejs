@@ -22,7 +22,7 @@ import { S3Client, CreateBucketCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new CreateBucketCommand({
-  Bucket: "procodrr-nodejs-bucket",
+	Bucket: "procodrr-nodejs-bucket",
 });
 await s3Client.send(command);
 console.log("Bucket created");
@@ -37,7 +37,7 @@ import { S3Client, DeletePublicAccessBlockCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new DeletePublicAccessBlockCommand({
-  Bucket: "procodrr-nodejs-bucket",
+	Bucket: "procodrr-nodejs-bucket",
 });
 
 await s3Client.send(command);
@@ -51,13 +51,13 @@ import { S3Client, PutPublicAccessBlockCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new PutPublicAccessBlockCommand({
-  Bucket: "procodrr-nodejs-bucket",
-  PublicAccessBlockConfiguration: {
-    BlockPublicAcls: false,
-    IgnorePublicAcls: false,
-    BlockPublicPolicy: false,
-    RestrictPublicBuckets: false,
-  },
+	Bucket: "procodrr-nodejs-bucket",
+	PublicAccessBlockConfiguration: {
+		BlockPublicAcls: false,
+		IgnorePublicAcls: false,
+		BlockPublicPolicy: false,
+		RestrictPublicBuckets: false,
+	},
 });
 await s3Client.send(command);
 console.log("Unblocked public access");
@@ -72,21 +72,21 @@ import { S3Client, PutBucketPolicyCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const policy = {
-  Version: "2012-10-17",
-  Statement: [
-    {
-      Sid: "PublicReadGetObject",
-      Effect: "Allow",
-      Principal: "*",
-      Action: "s3:GetObject",
-      Resource: "arn:aws:s3:::procodrr-nodejs-bucket/*",
-    },
-  ],
+	Version: "2012-10-17",
+	Statement: [
+		{
+			Sid: "PublicReadGetObject",
+			Effect: "Allow",
+			Principal: "*",
+			Action: "s3:GetObject",
+			Resource: "arn:aws:s3:::procodrr-nodejs-bucket/*",
+		},
+	],
 };
 
 const command = new PutBucketPolicyCommand({
-  Bucket: "procodrr-nodejs-bucket",
-  Policy: JSON.stringify(policy),
+	Bucket: "procodrr-nodejs-bucket",
+	Policy: JSON.stringify(policy),
 });
 
 await s3Client.send(command);
@@ -102,7 +102,7 @@ import { S3Client, DeleteBucketCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new DeleteBucketCommand({
-  Bucket: "procodrr-nodejs-bucket",
+	Bucket: "procodrr-nodejs-bucket",
 });
 await s3Client.send(command);
 console.log("Bucket deleted");
@@ -121,8 +121,8 @@ import { S3Client, ListObjectsV2Command } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new ListObjectsV2Command({
-  Bucket: "procodrr-nodejs-bucket",
-  Prefix: "optional/path/",
+	Bucket: "procodrr-nodejs-bucket",
+	Prefix: "optional/path/",
 });
 
 const response = await s3Client.send(command);
@@ -138,8 +138,8 @@ import { S3Client, HeadObjectCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new HeadObjectCommand({
-  Bucket: "procodrr-nodejs-bucket",
-  Key: "file.txt",
+	Bucket: "procodrr-nodejs-bucket",
+	Key: "file.txt",
 });
 
 const response = await s3Client.send(command);
@@ -156,8 +156,8 @@ import { pipeline } from "stream/promises";
 const s3Client = new S3Client();
 
 const command = new GetObjectCommand({
-  Bucket: "procodrr-nodejs-bucket",
-  Key: "file.txt",
+	Bucket: "procodrr-nodejs-bucket",
+	Key: "file.txt",
 });
 
 const response = await s3Client.send(command);
@@ -176,10 +176,10 @@ const s3Client = new S3Client();
 const fileBuffer = await readFile("./local-file.txt");
 
 const command = new PutObjectCommand({
-  Bucket: "procodrr-nodejs-bucket",
-  Key: "upload/file.txt",
-  Body: fileBuffer,
-  ContentType: "text/plain",
+	Bucket: "procodrr-nodejs-bucket",
+	Key: "upload/file.txt",
+	Body: fileBuffer,
+	ContentType: "text/plain",
 });
 
 await s3Client.send(command);
@@ -195,8 +195,8 @@ import { S3Client, DeleteObjectCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new DeleteObjectCommand({
-  Bucket: "procodrr-nodejs-bucket",
-  Key: "upload/file.txt",
+	Bucket: "procodrr-nodejs-bucket",
+	Key: "upload/file.txt",
 });
 await s3Client.send(command);
 console.log("File deleted");
@@ -209,15 +209,15 @@ import { S3Client, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 const s3Client = new S3Client();
 
 const command = new DeleteObjectsCommand({
-  Bucket: "your-bucket-name",
-  Delete: {
-    Objects: [
-      { Key: "uploads/file1.jpg" },
-      { Key: "uploads/file2.jpg" },
-      { Key: "uploads/file3.jpg" },
-    ],
-    Quiet: false, // set true to skip individual delete responses
-  },
+	Bucket: "your-bucket-name",
+	Delete: {
+		Objects: [
+			{ Key: "uploads/file1.jpg" },
+			{ Key: "uploads/file2.jpg" },
+			{ Key: "uploads/file3.jpg" },
+		],
+		Quiet: false, // set true to skip individual delete responses
+	},
 });
 
 const response = await s3Client.send(command);
@@ -231,7 +231,7 @@ console.log("Errors:", response.Errors);
 
 ```js
 const getPublicUrl = (bucket, key) => {
-  return `https://${bucket}.s3.amazonaws.com/${key}`;
+	return `https://${bucket}.s3.amazonaws.com/${key}`;
 };
 
 console.log(getPublicUrl("procodrr-nodejs-bucket", "upload/file.txt"));
